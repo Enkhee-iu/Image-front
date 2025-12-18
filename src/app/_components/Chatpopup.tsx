@@ -19,18 +19,31 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const userMsg = { role: "user", text: input };
-    setMessages((prev) => [...prev, userMsg]);
+    const userMsg: Message = { role: "user", text: input };
+    const updatedMessages = [...messages, userMsg];
+
+    setMessages(updatedMessages);
     setInput("");
     setLoading(true);
 
-    setTimeout(() => {
+    try {
+      const res = await fetch("http://localhost:999/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: updatedMessages }),
+      });
+
+      const data = await res.json();
+
+      setMessages((prev) => [...prev, { role: "ai", text: data.reply }]);
+    } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: "This is an AI response 🤖" },
+        { role: "ai", text: "⚠️ AI error occurred" },
       ]);
+    } finally {
       setLoading(false);
-    }, 800);
+    }
   };
 
   return (

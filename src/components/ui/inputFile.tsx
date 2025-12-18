@@ -5,9 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import DeleteIcon from "@/app/Icons/DeleteIcon";
 
-export default function ImageUpload() {
+type ImageUploadProps = {
+  setResult: (text: string) => void;
+};
+
+export default function ImageUpload({ setResult }: ImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(null);
-  const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -17,34 +20,27 @@ export default function ImageUpload() {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreview(reader.result as string); // base64
+      setPreview(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
 
   const handleRemove = () => {
     setPreview(null);
-    setResult("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
   const handleGenerate = async () => {
-    console.log("SENDING:", preview?.slice(0, 30));
-
     if (!preview) return;
 
-    setLoading(true);
-    setResult("");
-
-    const res = await fetch("http://localhost:999/ocr", {
+    const res = await fetch("http://localhost:999/caption", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ image: preview }),
     });
 
     const data = await res.json();
-    setResult(data.text);
-    setLoading(false);
+    setResult(data.caption); // MainPage-ийн textarea-д орно
   };
 
   return (
@@ -63,7 +59,10 @@ export default function ImageUpload() {
             alt="preview"
             className="w-full h-full object-cover rounded border"
           />
-          <button onClick={handleRemove} className="absolute bottom-2 right-2">
+          <button
+            onClick={handleRemove}
+            className="absolute bottom-2 right-2 w-6 h-6 bg-white flex  items-center justify-center rounded-sm"
+          >
             <DeleteIcon />
           </button>
         </div>
@@ -74,13 +73,6 @@ export default function ImageUpload() {
           {loading ? "Analyzing..." : "Generate"}
         </Button>
       </div>
-
-      {result && (
-        <div className="border rounded-lg p-4 text-sm">
-          <h4 className="font-semibold mb-2">Here is the summary</h4>
-          <pre className="whitespace-pre-wrap">{result}</pre>
-        </div>
-      )}
     </div>
   );
 }

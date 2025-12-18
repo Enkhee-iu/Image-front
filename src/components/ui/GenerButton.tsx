@@ -1,5 +1,21 @@
-import { Button } from "@/components/ui/button"
+import React from "react";
 
-export function ButtonDefault() {
-  return <Button className="mt-2">Generate</Button>
+type ButtonDefaultProps = {
+  children?: React.ReactNode;
+  onClick?: () => void | Promise<void>;
+};
+
+export function ButtonDefault({
+  children = "Generate",
+  onClick,
+}: ButtonDefaultProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="px-4 py-2 rounded bg-black text-white disabled:opacity-50"
+    >
+      {children}
+    </button>
+  );
 }

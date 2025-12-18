@@ -1,14 +1,16 @@
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea";
-
-export function InputEnabled() {
-  return(
-<div>
-  <Textarea
-    className="w-[580px] h-[124px] resize-none"
-    placeholder="Хоолны тайлбар"
-  />
-</div>
-  )
-  
+export function InputEnabled({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <input
+      value={value}
+      onChange={onChange}
+      className="w-full border rounded px-3 py-2"
+      placeholder="e.g. A realistic pizza on a wooden table"
+    />
+  );
 }
