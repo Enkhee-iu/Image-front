@@ -33,16 +33,22 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
         body: JSON.stringify({ messages: updatedMessages }),
       });
 
+      console.log("CHAT STATUS 👉", res.status);
+
       const data = await res.json();
+      console.log("CHAT DATA 👉", data);
+
+      if (!data.reply) {
+        throw new Error("No reply from AI");
+      }
 
       setMessages((prev) => [...prev, { role: "ai", text: data.reply }]);
-    } catch {
+    } catch (err) {
+      console.error("CHAT FRONTEND ERROR 👉", err);
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: "⚠️ AI error occurred" },
+        { role: "ai", text: "⚠️ AI did not respond" },
       ]);
-    } finally {
-      setLoading(false);
     }
   };
 

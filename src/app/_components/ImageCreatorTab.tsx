@@ -13,7 +13,7 @@ export default function ImageCreatorTab() {
   const [loading, setLoading] = useState(false);
 
   const generateImage = async () => {
-    if (!prompt.trim()) return;
+    if (!prompt.trim() || loading) return;
 
     setLoading(true);
     setImageUrl("");
@@ -24,6 +24,11 @@ export default function ImageCreatorTab() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
       });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
 
       const data = await res.json();
       setImageUrl(data.image);
@@ -68,7 +73,10 @@ export default function ImageCreatorTab() {
         />
 
         <div className="flex justify-end mt-3">
-          <ButtonDefault onClick={generateImage}>
+          <ButtonDefault
+            onClick={generateImage}
+            disabled={loading || !prompt.trim()}
+          >
             {loading ? "Generating..." : "Generate"}
           </ButtonDefault>
         </div>
@@ -81,7 +89,13 @@ export default function ImageCreatorTab() {
       </div>
 
       <div className="mt-3">
-        {!imageUrl && (
+        {loading && (
+          <p className="text-sm text-[#71717a]">
+            Generating image, please wait...
+          </p>
+        )}
+
+        {!loading && !imageUrl && (
           <p className="text-sm text-[#71717a]">
             First, enter your text to generate an image.
           </p>
