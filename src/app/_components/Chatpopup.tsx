@@ -2,7 +2,7 @@
 
 import { X, Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 type Message = {
   role: "user" | "ai";
@@ -15,12 +15,15 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
     const userMsg: Message = { role: "user", text: input };
     const updatedMessages = [...messages, userMsg];
+
+    setMessages(updatedMessages);
 
     setMessages(updatedMessages);
     setInput("");
@@ -33,24 +36,24 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
         body: JSON.stringify({ messages: updatedMessages }),
       });
 
-      console.log("CHAT STATUS 👉", res.status);
-
       const data = await res.json();
-      console.log("CHAT DATA 👉", data);
 
-      if (!data.reply) {
-        throw new Error("No reply from AI");
-      }
+      // ⭐ ЭНЭ ЧУХАЛ
+      setLoading(false);
 
       setMessages((prev) => [...prev, { role: "ai", text: data.reply }]);
-    } catch (err) {
-      console.error("CHAT FRONTEND ERROR 👉", err);
+    } catch {
+      setLoading(false);
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: "⚠️ AI did not respond" },
+        { role: "ai", text: "⚠️ AI error occurred" },
       ]);
     }
   };
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
   return (
     <div className="fixed bottom-24 right-8 w-[320px] h-105 bg-white border rounded-xl shadow-lg flex flex-col overflow-hidden">
@@ -82,6 +85,9 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
             AI is typing...
           </div>
         )}
+
+        {/* 👇 ЭНЭ НЭГ МӨР ЧУХАЛ */}
+        <div ref={bottomRef} />
       </div>
 
       {/* Input */}

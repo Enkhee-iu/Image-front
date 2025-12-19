@@ -77,7 +77,7 @@ export default function ImageCreatorTab() {
             onClick={generateImage}
             disabled={loading || !prompt.trim()}
           >
-            {loading ? "Generating..." : "Generate"}
+            {loading ? "Analyzing..." : "Generate"}
           </ButtonDefault>
         </div>
       </div>
