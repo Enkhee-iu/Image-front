@@ -30,7 +30,7 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:999/chat", {
+      const res = await fetch("https://image-back-j98e.onrender.com/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: updatedMessages }),

@@ -38,7 +38,7 @@ export default function ImageUpload({ setResult }: ImageUploadProps) {
       setLoading(true);
       setResult("");
 
-      const res = await fetch("http://localhost:999/caption", {
+      const res = await fetch("https://image-back-j98e.onrender.com/caption", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ image: preview }),

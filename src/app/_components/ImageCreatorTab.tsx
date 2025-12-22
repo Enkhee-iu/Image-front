@@ -19,11 +19,14 @@ export default function ImageCreatorTab() {
     setImageUrl("");
 
     try {
-      const res = await fetch("http://localhost:999/image-create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt }),
-      });
+      const res = await fetch(
+        "https://image-back-j98e.onrender.com/image-create",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt }),
+        }
+      );
 
       if (!res.ok) {
         const text = await res.text();

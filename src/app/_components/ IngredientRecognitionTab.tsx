@@ -21,11 +21,14 @@ export default function IngredientRecognitionTab() {
       setLoading(true);
       setResult("");
 
-      const res = await fetch("http://localhost:999/ingredients", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
-      });
+      const res = await fetch(
+        "https://image-back-j98e.onrender.com/ingredients",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text }),
+        }
+      );
 
       const data = await res.json();
       setResult(data.ingredients || "No ingredients found");
