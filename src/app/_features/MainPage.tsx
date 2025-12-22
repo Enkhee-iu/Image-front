@@ -7,20 +7,28 @@ import ChatPopup from "../_components/Chatpopup";
 
 // Tabs components
 import ImageAnalysisTab from "../_components/ImageAnalysisTab";
-import IngredientRecognitionTab from "../_components/ IngredientRecognitionTab";
 import ImageCreatorTab from "../_components/ImageCreatorTab";
+import IngredientRecognitionTab from "../_components/ IngredientRecognitionTab";
 
 export default function MainPage() {
   const [openChat, setOpenChat] = useState(false);
   const [mounted, setMounted] = useState(false);
+
+  // 🔑 IMAGE ANALYSIS STATE — ЯГ ЭНД
+  const [preview, setPreview] = useState<string | null>(null);
   const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [activeTab, setActiveTab] = useState("analysis");
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
 
+    // analysis-оос гарвал бүгд reset
     if (value !== "analysis") {
       setResult("");
+      setPreview(null);
+      setLoading(false);
     }
   };
 
@@ -33,24 +41,31 @@ export default function MainPage() {
   return (
     <>
       <div className="flex justify-center relative">
-        {/* ✅ ONE Tabs only */}
         <Tabs
           value={activeTab}
           onValueChange={handleTabChange}
           className="w-145 pt-6 pb-6 gap-6"
         >
-          {/* Tabs header */}
           <TabsList>
-            <TabsTrigger value="analysis">Image analysis</TabsTrigger>
-            <TabsTrigger value="recognition">
+            <TabsTrigger className="cursor-pointer" value="analysis">
+              Image analysis
+            </TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="recognition">
               Ingredient recognition
             </TabsTrigger>
-            <TabsTrigger value="creator">Image creator</TabsTrigger>
+            <TabsTrigger className="cursor-pointer" value="creator">
+              Image creator
+            </TabsTrigger>
           </TabsList>
 
-          {/* Image analysis */}
           <TabsContent value="analysis">
-            <ImageAnalysisTab result={result} setResult={setResult} />
+            <ImageAnalysisTab
+              result={result}
+              setResult={setResult}
+              setPreview={setPreview}
+              loading={loading}
+              setLoading={setLoading}
+            />
           </TabsContent>
 
           {/* Ingredient recognition */}

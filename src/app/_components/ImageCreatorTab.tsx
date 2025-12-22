@@ -49,7 +49,10 @@ export default function ImageCreatorTab() {
         </div>
 
         <div
-          className="w-12 h-10 flex items-center justify-center cursor-pointer"
+          className="cursor-pointer
+                     transition
+                     hover:opacity-70
+                     active:scale-95"
           onClick={() => {
             setPrompt("");
             setImageUrl("");
@@ -68,8 +71,8 @@ export default function ImageCreatorTab() {
         <Textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="e.g. A realistic burger with cheese and lettuce on a wooden table"
-          className="min-h-[120px]"
+          placeholder="Хоолны тайлбар"
+          className="min-h-30"
         />
 
         <div className="flex justify-end mt-3">

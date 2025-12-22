@@ -1,25 +1,27 @@
 "use client";
 
+import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { ButtonDefault } from "@/components/ui/GenerButton";
 import PaperIcon from "../Icons/PaperIcon";
 import RefreshButton from "../Icons/RefreshButton";
 import StarIcon from "../Icons/StartIcon";
-import { useState } from "react";
 
 export default function IngredientRecognitionTab() {
   const [text, setText] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // 🔑 ImageCreatorTab-тай ИЖИЛ логик
+  const isDisabled = loading || !text.trim();
+
   const generate = async () => {
-    setResult("• Rice\n• Chicken\n• Egg");
     if (!text.trim()) return;
 
-    setLoading(true);
-    setResult("");
-
     try {
+      setLoading(true);
+      setResult("");
+
       const res = await fetch("http://localhost:999/ingredients", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -27,12 +29,18 @@ export default function IngredientRecognitionTab() {
       });
 
       const data = await res.json();
-      setResult(data.ingredients);
-    } catch (err) {
+      setResult(data.ingredients || "No ingredients found");
+    } catch {
       setResult("Failed to recognize ingredients");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRefresh = () => {
+    setText("");
+    setResult("");
+    setLoading(false);
   };
 
   return (
@@ -45,11 +53,9 @@ export default function IngredientRecognitionTab() {
         </div>
 
         <div
-          className="cursor-pointer"
-          onClick={() => {
-            setText("");
-            setResult("");
-          }}
+          className="cursor-pointer transition hover:opacity-70 active:scale-95"
+          onClick={handleRefresh}
+          title="Clear input & result"
         >
           <RefreshButton />
         </div>
@@ -60,17 +66,21 @@ export default function IngredientRecognitionTab() {
         Describe the food, and AI will detect the ingredients.
       </p>
 
-      {/* INPUT — Food description */}
+      {/* Input */}
       <Textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="e.g. Chicken fried rice with egg and carrot"
-        className="min-h-30"
+        placeholder="Орц тодорхойлох"
+        className="min-h-[120px]"
       />
 
-      {/* Generate button */}
+      {/* Generate */}
       <div className="flex justify-end mt-3">
-        <ButtonDefault onClick={generate} disabled={loading}>
+        <ButtonDefault
+          onClick={generate}
+          disabled={isDisabled}
+          className={isDisabled ? "bg-zinc-400" : "bg-black"}
+        >
           {loading ? "Analyzing..." : "Generate"}
         </ButtonDefault>
       </div>
@@ -81,12 +91,12 @@ export default function IngredientRecognitionTab() {
         <p className="text-[20px] font-semibold">Identified Ingredients</p>
       </div>
 
-      {/* RESULT — AI output */}
+      {/* Result */}
       <Textarea
         value={result}
         readOnly
         placeholder="Result will appear here..."
-        className="mt-2 "
+        className="mt-2"
       />
     </>
   );

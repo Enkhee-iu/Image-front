@@ -46,7 +46,7 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
       setLoading(false);
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: "⚠️ AI error occurred" },
+        { role: "ai", text: "AI error occurred" },
       ]);
     }
   };
@@ -86,11 +86,9 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
           </div>
         )}
 
-        {/* 👇 ЭНЭ НЭГ МӨР ЧУХАЛ */}
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
       <div className="p-3 border-t flex gap-2">
         <Input
           placeholder="Type your message..."

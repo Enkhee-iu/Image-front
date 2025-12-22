@@ -1,18 +1,25 @@
 "use client";
 
+import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import ImageUpload from "@/components/ui/inputFile";
 import PaperIcon from "../Icons/PaperIcon";
 import RefreshButton from "../Icons/RefreshButton";
 import StarIcon from "../Icons/StartIcon";
 
-export default function ImageAnalysisTab({
-  result,
-  setResult,
-}: {
+type Props = {
   result: string;
   setResult: (v: string) => void;
-}) {
+};
+
+export default function ImageAnalysisTab({ result, setResult }: Props) {
+  const [resetKey, setResetKey] = useState(0);
+
+  const handleImageRefresh = () => {
+    setResult("");
+    setResetKey((k) => k + 1);
+  };
+
   return (
     <>
       {/* Header */}
@@ -22,19 +29,25 @@ export default function ImageAnalysisTab({
           <p className="text-[20px] font-semibold">Image analysis</p>
         </div>
 
-        <div className="cursor-pointer" onClick={() => setResult("")}>
+        <div
+          className="cursor-pointer
+                     transition
+                     hover:opacity-70
+                     active:scale-95"
+          onClick={handleImageRefresh}
+          title="Clear image & analysis"
+        >
           <RefreshButton />
         </div>
       </div>
 
       {/* Upload */}
-      <div className="mt-5 text-sm text-[#71717a]">
+      <div className="mt-5 text-sm text-[#71717a] ">
         <p className="mb-2">
           Upload a food photo, and AI will detect the ingredients.
         </p>
 
-        {/* ImageUpload дотор Generate button байгаа */}
-        <ImageUpload setResult={setResult} />
+        <ImageUpload key={resetKey} setResult={setResult} />
       </div>
 
       {/* Result */}
@@ -47,7 +60,7 @@ export default function ImageAnalysisTab({
         value={result}
         readOnly
         placeholder="First, enter your image to recognize ingredients."
-        className="mt-2 "
+        className="mt-2"
       />
     </>
   );

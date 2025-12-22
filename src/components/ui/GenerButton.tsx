@@ -3,17 +3,36 @@ import React from "react";
 type ButtonDefaultProps = {
   children?: React.ReactNode;
   onClick?: () => void | Promise<void>;
+  disabled?: boolean;
+  className?: string;
 };
 
 export function ButtonDefault({
-  children = "Generate",
+  children,
   onClick,
+  disabled = false,
+  className = "",
 }: ButtonDefaultProps) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="px-4 py-2 rounded bg-black text-white disabled:opacity-50"
+      disabled={disabled}
+      className={`
+        w-23.5 h-10
+        px-4
+        rounded-md
+        bg-black text-white
+        text-sm font-medium
+        flex items-center justify-center gap-2
+        transition
+        cursor-pointer
+        hover:opacity-90
+        active:scale-95
+        disabled:opacity-50
+        disabled:cursor-not-allowed
+        ${className}
+      `}
     >
       {children}
     </button>

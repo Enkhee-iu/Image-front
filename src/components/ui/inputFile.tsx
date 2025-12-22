@@ -27,20 +27,31 @@ export default function ImageUpload({ setResult }: ImageUploadProps) {
 
   const handleRemove = () => {
     setPreview(null);
+    setResult(""); //
     if (inputRef.current) inputRef.current.value = "";
   };
 
   const handleGenerate = async () => {
     if (!preview) return;
 
-    const res = await fetch("http://localhost:999/caption", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image: preview }),
-    });
+    try {
+      setLoading(true);
+      setResult("");
 
-    const data = await res.json();
-    setResult(data.caption); // MainPage-ийн textarea-д орно
+      const res = await fetch("http://localhost:999/caption", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: preview }),
+      });
+
+      const data = await res.json();
+      setResult(data?.caption || "No result");
+    } catch (err) {
+      console.error(err);
+      setResult("Failed to analyze image");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,26 +61,32 @@ export default function ImageUpload({ setResult }: ImageUploadProps) {
         type="file"
         accept="image/*"
         onChange={handleChange}
+        className="cursor-pointer"
       />
 
       {preview && (
-        <div className="relative w-40 h-40">
+        <div className="relative w-50 h-50">
           <img
             src={preview}
             alt="preview"
-            className="w-full h-full object-cover rounded border"
+            className="w-full h-full object-cover rounded border "
           />
           <button
             onClick={handleRemove}
-            className="absolute bottom-2 right-2 w-6 h-6 bg-white flex  items-center justify-center rounded-sm"
+            className="absolute bottom-2 right-2 w-6 h-6 bg-white
+                       flex items-center cursor-pointer justify-center rounded-sm"
           >
             <DeleteIcon />
           </button>
         </div>
       )}
 
-      <div className="flex justify-end">
-        <Button onClick={handleGenerate} disabled={!preview || loading}>
+      <div className="flex justify-end ">
+        <Button
+          className="cursor-pointer"
+          onClick={handleGenerate}
+          disabled={!preview || loading}
+        >
           {loading ? "Analyzing..." : "Generate"}
         </Button>
       </div>
