@@ -12,7 +12,6 @@ export default function IngredientRecognitionTab() {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔑 ImageCreatorTab-тай ИЖИЛ логик
   const isDisabled = loading || !text.trim();
 
   const generate = async () => {

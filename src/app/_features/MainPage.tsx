@@ -1,21 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import MessageCircle from "../Icons/MessageCircle";
 import ChatPopup from "../_components/Chatpopup";
 
-// Tabs components
 import ImageAnalysisTab from "../_components/ImageAnalysisTab";
 import ImageCreatorTab from "../_components/ImageCreatorTab";
 import IngredientRecognitionTab from "../_components/ IngredientRecognitionTab";
 
 export default function MainPage() {
   const [openChat, setOpenChat] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
-  // 🔑 IMAGE ANALYSIS STATE — ЯГ ЭНД
-  const [preview, setPreview] = useState<string | null>(null);
+  const [_preview, setPreview] = useState<string | null>(null);
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,19 +21,12 @@ export default function MainPage() {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
 
-    // analysis-оос гарвал бүгд reset
     if (value !== "analysis") {
       setResult("");
       setPreview(null);
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   return (
     <>
@@ -68,7 +58,6 @@ export default function MainPage() {
             />
           </TabsContent>
 
-          {/* Ingredient recognition */}
           <TabsContent value="recognition">
             <IngredientRecognitionTab />
           </TabsContent>
@@ -79,7 +68,6 @@ export default function MainPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Floating chat button */}
         <div
           className="fixed bottom-8 right-8 h-12 w-12 rounded-full bg-[#18181b]
                      flex items-center justify-center cursor-pointer"

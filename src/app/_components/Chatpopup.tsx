@@ -38,7 +38,6 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
 
       const data = await res.json();
 
-      // ⭐ ЭНЭ ЧУХАЛ
       setLoading(false);
 
       setMessages((prev) => [...prev, { role: "ai", text: data.reply }]);

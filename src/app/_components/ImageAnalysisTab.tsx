@@ -10,6 +10,9 @@ import StarIcon from "../Icons/StartIcon";
 type Props = {
   result: string;
   setResult: (v: string) => void;
+  setPreview: (v: string | null) => void;
+  loading: boolean;
+  setLoading: (v: boolean) => void;
 };
 
 export default function ImageAnalysisTab({ result, setResult }: Props) {
@@ -30,10 +33,7 @@ export default function ImageAnalysisTab({ result, setResult }: Props) {
         </div>
 
         <div
-          className="cursor-pointer
-                     transition
-                     hover:opacity-70
-                     active:scale-95"
+          className={`cursor-pointer transition hover:opacity-70 active:scale-95`}
           onClick={handleImageRefresh}
           title="Clear image & analysis"
         >

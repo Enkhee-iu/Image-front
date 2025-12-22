@@ -33,7 +33,7 @@ export default function ImageCreatorTab() {
       const data = await res.json();
       setImageUrl(data.image);
     } catch (err) {
-      console.error("IMAGE CREATE ERROR 👉", err);
+      console.error("IMAGE CREATE ERROR ", err);
     } finally {
       setLoading(false);
     }
