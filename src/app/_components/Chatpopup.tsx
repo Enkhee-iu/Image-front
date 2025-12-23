@@ -81,7 +81,7 @@ export default function ChatPopup({ onClose }: { onClose: () => void }) {
 
         {loading && (
           <div className="bg-gray-100 px-3 py-2 rounded-lg w-fit text-xs text-muted-foreground">
-            AI is typing...
+            AI is typing..
           </div>
         )}
 
